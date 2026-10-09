@@ -1,12 +1,12 @@
 """The |pydwf| package provides classes and types to control Digilent Waveforms devices."""
 
 # The version number of the *pydwf* package.
-__version__ = "1.1.17"
+__version__ = "1.1.19"
 
 # The *DwfLibrary* type is the only type users need to access library functionality.
 from pydwf.core.dwf_library import DwfLibrary
 
-# Import DwfDevice to make it importable from the toplevel "pydwf" module.
+# The *DwfDevice* type is not normally needed, but it may be convenient for type annotation.
 from pydwf.core.dwf_device import DwfDevice
 
 # Import the sub-APIs so they can be imported from the toplevel "pydwf" module.
@@ -27,6 +27,7 @@ from pydwf.core.api.protocol_can import ProtocolCAN
 from pydwf.core.api.protocol_swd import ProtocolSWD
 
 # Import the 27 enumeration types and make them available for import directly from the *pydwf* package.
+
 from pydwf.core.auxiliary.enum_types import (DwfErrorCode, DwfEnumFilter, DwfEnumConfigInfo, DwfDeviceID,
                                              DwfDeviceVersion, DwfDeviceParameter, DwfWindow, DwfState,
                                              DwfTriggerSource, DwfTriggerSlope, DwfAcquisitionMode,
@@ -38,4 +39,5 @@ from pydwf.core.auxiliary.enum_types import (DwfErrorCode, DwfEnumFilter, DwfEnu
                                              DwfAnalogIO, DwfAnalogImpedance, DwfDmm)
 
 # Import the two exception classes and make them available for import directly from the *pydwf* package.
+
 from pydwf.core.auxiliary.exceptions import PyDwfError, DwfLibraryError

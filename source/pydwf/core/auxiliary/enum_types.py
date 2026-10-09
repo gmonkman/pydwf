@@ -39,10 +39,10 @@ class DwfErrorCode(_FixReprMethod, enum.Enum):
     """No error occurred."""
 
     UnknownError = 1
-    """Unknown error."""
+    """Call waiting on pending API time out."""
 
     ApiLockTimeout = 2
-    """API waiting on pending operation timed out."""
+    """Call waiting on pending API time out."""
 
     AlreadyOpened = 3
     """Device already opened."""
@@ -63,7 +63,11 @@ class DwfErrorCode(_FixReprMethod, enum.Enum):
     """Invalid parameter sent in API call."""
 
     InvalidParameter4 = 0x14
-    """Invalid parameter sent in API call."""
+    """Invalid parameter sent in API call.
+
+    Note:
+        This value is not listed in the most recent version of the documentation.
+    """
 
 
 class DwfEnumFilter(_FixReprMethod, enum.Flag):
@@ -78,23 +82,26 @@ class DwfEnumFilter(_FixReprMethod, enum.Flag):
     All = 0
     """Enumerate all available devices."""
 
-    Type = 0x08000000
-    """Enumerate by type (0x08000000)."""
+    DEVID = 1
+    """Use devic to filter specific devices."""
 
-    USB = 0x00000001
+    Type = 0x08000000
+    """Use filters below (0x08000000)."""
+
+    USB = 0x0000001
     """Enumerate USB devices."""
 
-    Network = 0x00000002
+    Network = 0x0000002
     """Enumerate Network devices."""
 
-    AXI = 0x00000004
-    """Enumerate AXI devices (used when running on an ADP 3x50 device)."""
+    AXI = 0x0000004
+    """Enumerate embedded devices (used when running on an ADP 3x50 device)."""
 
     Remote = 0x01000000
-    """Enumerate remote devices (0x01000000)."""
+    """Enumerate remote table devices (0x01000000)."""
 
     Audio = 0x02000000
-    """Enumerate audio devices (0x02000000)."""
+    """Enumerate sound card devicess (0x02000000)."""
 
     Demo = 0x04000000
     """Enumerate demo devices (0x04000000)."""
@@ -181,7 +188,7 @@ class DwfDeviceID(_FixReprMethod, enum.Enum):
     """Electronics Explorer devices."""
 
     Discovery = 2
-    """Analog Discovery devices."""
+    """Analog Discovery (1) devices."""
 
     Discovery2 = 3
     """Analog Discovery 2 devices."""
@@ -248,6 +255,9 @@ class DwfDeviceParameter(_FixReprMethod, enum.Enum):
     Warning:
 
         This value is *obsolete*. Use *OnClose* instead.
+
+    Note:
+        This value is not listed in the most recent version of the documentation.
     """
 
     UsbPower = 2
@@ -259,6 +269,9 @@ class DwfDeviceParameter(_FixReprMethod, enum.Enum):
     * 1 — Keep USB power enabled.
 
     This setting is implemented on the Analog Discovery 2.
+
+    Note:
+        This value is not listed in the most recent version of the documentation.
     """
 
     LedBrightness = 3
@@ -279,8 +292,8 @@ class DwfDeviceParameter(_FixReprMethod, enum.Enum):
     Possible values:
 
     * 0 — On close, continue.
-    * 1 — On close, stop the device.
-    * 2 — On close, shut down the device.
+    * 1 — On close, stop the device outputs but keep the device operational to prevent temperature drifts.
+    * 2 — On close, shut down the device to minimize power consumption.
     """
 
     AudioOut = 5
@@ -289,7 +302,7 @@ class DwfDeviceParameter(_FixReprMethod, enum.Enum):
     Possible values:
 
     * 0 — Disable audio output.
-    * 1 — Enable audio output.
+    * 1 — Enable audio output (default).
 
     This setting is implemented on the Analog Discovery and the Analog Discovery 2.
     """
@@ -298,6 +311,7 @@ class DwfDeviceParameter(_FixReprMethod, enum.Enum):
     """USB power limit.
 
     The value ranges from 0 to 1000, in mA. The value -1 denotes no limit.
+    Recommended value is in the 600—1000 mA range.
 
     This setting is implemented on the Analog Discovery and the Analog Discovery 2.
     """
@@ -309,24 +323,20 @@ class DwfDeviceParameter(_FixReprMethod, enum.Enum):
 
     * 0 — Disable analog output.
     * 1 — Enable analog output.
+
+    This setting is implemented on the Analog Discovery Pro 3x50.
     """
 
     Frequency = 8
-    """This parameter is undocumented.
+    """Adjust system frequency in Hz. Default: 100 MHz.
 
-    Todo:
-        The meaning of this parameter needs to be understood.
-
-        It is some frequency; comments say unit is Hz.
+    This setting is implemented on the Digital Discovery and Analog Discovery Pro 3x50.
     """
 
     ExtFreq = 9
-    """This parameter is undocumented.
+    """Specify for input or set reference output frequency in Hz. Default: 10 MHz.
 
-    Todo:
-        The meaning of this parameter needs to be understood.
-
-        It is some frequency; comments say unit is Hz.
+    This setting is implemented on the Analog Discovery Pro 3x50.
     """
 
     ClockMode = 10
@@ -337,21 +347,23 @@ class DwfDeviceParameter(_FixReprMethod, enum.Enum):
 
     Possible values:
 
-    * 0 — internal.
-    * 1 — output.
-    * 2 — input.
-    * 3 — IO.
+    * 0 — Use internal oscillator (default).
+    * 1 — Enable reference output on trigger-1 channel.
+    * 2 — Use reference input from trigger-1 channel.
+    * 3 — Use trigger-1 as reference I/O.
+
+    This setting is implemented on the Analog Discovery Pro 3x50.
     """
 
     TempLimit = 11
-    """This parameter is undocumented.
+    """Specify the over temperature threshold in degree Celcius on devices which support such option.
 
     Todo:
         The meaning of this parameter needs to be understood.
     """
 
     FreqPhase = 12
-    """This parameter is undocumented.
+    """Specify the system clock phase which is useful for device synchronization when a reference input clock is used.
 
     Todo:
         The meaning of this parameter needs to be understood.
@@ -449,10 +461,13 @@ class DwfTriggerSource(_FixReprMethod, enum.Enum):
     """
 
     None_ = 0
-    """No trigger configured (device starts immediately)."""
+    """No trigger configured (device starts immediately).
+
+    The trigger pin is high impedance (input). This is the default setting.
+    """
 
     PC = 1
-    """PC (software) trigger."""
+    """PC (software) trigger. This can be used, for example, to synchronously start multiple instruments."""
 
     DetectorAnalogIn  = 2
     """AnalogIn trigger detector."""
@@ -461,37 +476,37 @@ class DwfTriggerSource(_FixReprMethod, enum.Enum):
     """DigitalIn trigger detector."""
 
     AnalogIn = 4
-    """AnalogIn instrument start."""
+    """AnalogIn instrument trigger. The trigger level is high when the instrument is running."""
 
     DigitalIn = 5
-    """DigitalIn instrument start."""
+    """DigitalIn instrument trigger. The trigger level is high when the instrument is running."""
 
     DigitalOut = 6
-    """DigitalOut instrument start."""
+    """DigitalOut instrument trigger. The trigger level is high when the instrument is running."""
 
     AnalogOut1 = 7
-    """|AnalogOut| instrument channel 1 start."""
+    """|AnalogOut| instrument trigger 1 start. The trigger level is high when the instrument is running."""
 
     AnalogOut2 = 8
-    """|AnalogOut| instrument channel 2 start."""
+    """|AnalogOut| instrument trigger 2 start. The trigger level is high when the instrument is running."""
 
     AnalogOut3 = 9
-    """|AnalogOut| instrument channel 3 start."""
+    """|AnalogOut| instrument trigger 3 start. The trigger level is high when the instrument is running."""
 
     AnalogOut4 = 10
-    """|AnalogOut| instrument channel 4 start."""
+    """|AnalogOut| instrument trigger 4 start. The trigger level is high when the instrument is running"""
 
     External1 = 11
-    """External trigger #1."""
+    """External trigger signal #1."""
 
     External2 = 12
-    """External trigger #2."""
+    """External trigger signal #2."""
 
     External3 = 13
-    """External trigger #3."""
+    """External trigger signal #3."""
 
     External4 = 14
-    """External trigger #4."""
+    """External trigger signal #4."""
 
     High = 15
     """High (undocumented)."""
@@ -559,7 +574,7 @@ class DwfAcquisitionMode(_FixReprMethod, enum.Enum):
     """
 
     ScanScreen = 2
-    """Perform continuous acquisition circularly writing samples into the buffer.
+    """Perform continuous acquisition, circularly writing samples into the buffer.
 
     This is similar to a heart-monitor display.
 
@@ -572,7 +587,11 @@ class DwfAcquisitionMode(_FixReprMethod, enum.Enum):
     """Perform acquisition for the length of time set by the instrument's *recordLengthSet()* method."""
 
     Overs = 4
-    """Overscan mode (undocumented)."""
+    """Overscan mode.
+
+    Note:
+        This value is not listed in the most recent version of the documentation.
+    """
 
     Single1 = 5
     """Perform a single buffer acquisition.
@@ -606,16 +625,20 @@ class DwfAnalogInFilter(_FixReprMethod, enum.Enum):
     """
 
     Decimate = 0
-    """Decimation filter."""
+    """Decimation filter. Store every N'th ADC conversion, where N = ADC frequency / acquisition frequency."""
 
     Average = 1
-    """Averaging filter."""
+    """Averaging filter. Store the average of N ADC conversions."""
 
     MinMax = 2
-    """Min/max filter."""
+    """Min/max filter. Store, interleaved, the minimum and maximum values, of 2 * N concersions."""
 
     AverageFit = 3
-    """Averaging fit filter."""
+    """Averaging fit filter.
+
+    Note:
+        This value is not listed in the most recent version of the documentation.
+    """
 
 
 @enum.unique
@@ -720,64 +743,36 @@ class DwfAnalogOutFunction(_FixReprMethod, enum.Enum):
     """Sinusoid Power waveform shape. The signal level varies between -1 and 1."""
 
     CustomPattern = 28
-    """(Not documented.)"""
+    """Generate waveform from custom samples.
+
+    It provides constant sample rate, supporting integer divisions of the system frequency.
+
+    Note:
+       This description is taken verbatim from the documentation (|dwfsdk.pdf|). It is unclear what it means.
+    """
 
     PlayPattern = 29
-    """(Not documented.)"""
+    """Generate waveform in stream play style. It provides constant sample rate.
+
+    Note:
+       This description is taken verbatim from the documentation (|dwfsdk.pdf|). It is unclear what it means.
+    """
 
     Custom = 30
-    """Custom (user-defined) waveform shape. The signal level varies between -1 and 1."""
+    """Generate waveform from custom samples.
+    
+    Optimizes for average requested frequency, sample output lengths may vary by one system frequency period.
+
+    Note:
+       This description is taken verbatim from the documentation (|dwfsdk.pdf|). It is unclear what it means.
+    """
 
     Play = 31
-    """Continuous playback mode. The signal level varies between -1 and 1."""
+    """Generate waveform in stream play style. Optimizes for average requested frequency.
 
-    AnalogIn1 = 64
-    """(Not documented.)"""
-
-    AnalogIn2 = 65
-    """(Not documented.)"""
-
-    AnalogIn3 = 66
-    """(Not documented.)"""
-
-    AnalogIn4 = 67
-    """(Not documented.)"""
-
-    AnalogIn5 = 68
-    """(Not documented.)"""
-
-    AnalogIn6 = 69
-    """(Not documented.)"""
-
-    AnalogIn7 = 70
-    """(Not documented.)"""
-
-    AnalogIn8 = 71
-    """(Not documented.)"""
-
-    AnalogIn9 = 72
-    """(Not documented.)"""
-
-    AnalogIn10 = 73
-    """(Not documented.)"""
-
-    AnalogIn11 = 74
-    """(Not documented.)"""
-
-    AnalogIn12 = 75
-    """(Not documented.)"""
-
-    AnalogIn13 = 76
-    """(Not documented.)"""
-
-    AnalogIn14 = 77
-    """(Not documented.)"""
-
-    AnalogIn15 = 78
-    """(Not documented.)"""
-
-    AnalogIn16 = 79
-    """(Not documented.)"""
+    Note:
+       This description is taken verbatim from the documentation (|dwfsdk.pdf|). It is unclear what it means.
+    """
 
 
 @enum.unique
@@ -793,10 +788,10 @@ class DwfAnalogOutNode(_FixReprMethod, enum.Enum):
     """Carrier signal node. This node represents the base signal without modulation applied."""
 
     FM = 1
-    """Frequency Modulation node."""
+    """Frequency Modulation node. (Frequency or Phase modulation, according to the latest documentation)."""
 
     AM = 2
-    """Amplitude Modulation node."""
+    """Amplitude Modulation node. (Amplitude or Sum modulation, according to the latest documentation)."""
 
 
 @enum.unique
@@ -828,7 +823,7 @@ class DwfAnalogOutIdle(_FixReprMethod, enum.Enum):
     """When idle, disable the output."""
 
     Offset = 1
-    """When idle, drive the analog output offset."""
+    """When idle, drive the configured analog output offset."""
 
     Initial = 2
     """When idle, drive the initial value of the selected waveform shape."""

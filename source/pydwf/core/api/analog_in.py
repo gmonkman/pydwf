@@ -144,7 +144,7 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
             This value is updated even if the :py:meth:`status` method is called with argument False.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
 
         Returns:
             float: The most recent ADC value of this channel, in Volts.
@@ -287,11 +287,11 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
         Note that the applied calibration is channel-dependent.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
-            count: int: The number of samples to retrieve.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            count (int): The number of samples to retrieve.
 
         Returns:
-            A 1D numpy array of floats, in Volts.
+            nd.array: A 1D numpy array of floats, in Volts.
 
         Raises:
             DwfLibraryError: An error occurred while retrieving the sample data.
@@ -325,7 +325,7 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
             count (int): Sample count.
 
         Returns:
-            A 1D numpy array of floats, in Volts.
+            nd.array: A 1D numpy array of floats, in Volts.
 
         Raises:
             DwfLibraryError: An error occurred while retrieving the sample data.
@@ -779,8 +779,8 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
         """Enable or disable the specified |AnalogIn| input channel.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
-            channel_enable: bool: Whether to enable (True) or disable (False) the specified channel.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_enable (bool): Whether to enable (True) or disable (False) the specified channel.
 
         Raises:
             DwfLibraryError: An error occurred while enabling or disabling the channel.
@@ -793,7 +793,7 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
         """Get the current enable/disable status of the specified |AnalogIn| input channel.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
 
         Returns:
             bool: Channel is enabled (True) or disabled (False).
@@ -844,7 +844,7 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
         """Get the |AnalogIn| input channel filter setting.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
 
         Returns:
             DwfAnalogInFilter: The currently selected channel filter mode.
@@ -904,8 +904,8 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
             Changing the channel range may also change the channel offset.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
-            channel_range: float: The requested channel range, in Volts.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_range (float): The requested channel range, in Volts.
 
         Raises:
             DwfLibraryError: An error occurred while setting the channel voltage range.
@@ -920,7 +920,7 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
         Together with the channel offset, this value can be used to transform raw binary ADC values into Volts.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
 
         Returns:
             float: The actual channel range, in Volts.
@@ -994,8 +994,8 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
             Changing the channel offset may also change the channel range.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
-            channel_offset: float: The channel offset, in Volts.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_offset (float): The channel offset, in Volts.
 
         Raises:
             DwfLibraryError: An error occurred while setting the channel offset.
@@ -1010,7 +1010,7 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
         Together with the channel range, this value can be used to transform raw binary ADC values into Volts.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
 
         Returns:
             float: The currently configured channel offset, in Volts.
@@ -1039,8 +1039,8 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
             Changing the channel attenuation will also change the channel offset and range.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
-            channel_attenuation: float: The requested channel attenuation setting.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_attenuation (float): The requested channel attenuation setting.
                 If it is 0.0, the attenuation is set to 1.0 (the default) instead.
 
         Raises:
@@ -1064,7 +1064,7 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
         if a direct connection without attenuation is used.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
 
         Returns:
             float: The channel attenuation setting.
@@ -1090,8 +1090,8 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
             but the value has no effect.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
-            channel_bandwidth: float: The channel bandwidth setting, in Hz.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_bandwidth (float): The channel bandwidth setting, in Hz.
 
         Raises:
             DwfLibraryError: An error occurred while setting the channel bandwidth.
@@ -1108,7 +1108,7 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
             but the value has no effect.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
 
         Returns:
             float: The channel bandwidth setting, in Hz.
@@ -1131,8 +1131,8 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
             but the value has no effect.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
-            channel_impedance: float: channel impedance setting, in Ohms.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_impedance (float): channel impedance setting, in Ohms.
 
         Raises:
             DwfLibraryError: An error occurred while setting the current channel impedance.
@@ -1149,7 +1149,7 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
             but the value has no effect.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
 
         Returns:
             float: The channel impedance setting, in Ohms.
@@ -1183,8 +1183,8 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
         """Set the |AnalogIn| input channel coupling.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
-            channel_coupling: AnalogCoupling: channel coupling to be set.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_coupling (AnalogCoupling): channel coupling to be set.
 
         Raises:
             DwfLibraryError: An error occurred while setting the current channel coupling.
@@ -1197,7 +1197,7 @@ class AnalogIn(AbstractDwfDeviceSubAPI):
         """Get the |AnalogIn| input channel impedance setting, in Ohms.
 
         Parameters:
-            channel_index: int: The channel index, in the range 0 to :py:meth:`channelCount`-1.
+            channel_index (int): The channel index, in the range 0 to :py:meth:`channelCount`-1.
 
         Returns:
             DwfAnalogCoupling: The channel coupling (DC or AC).

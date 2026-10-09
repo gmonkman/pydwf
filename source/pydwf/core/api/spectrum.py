@@ -38,6 +38,10 @@ class Spectrum(AbstractDwfLibrarySubAPI):
 
            The second element of the tuple is the noise equivalent bandwidth of the signal. For a coefficient array
            `w`, this value is equal to `len(w) * np.sum(w**2) / np.sum(w)**2`.
+
+        Note:
+           When working in Python, it may be better to use the functionality provided in the scipy.signal.windows
+           package instead.
         """
 
         if beta is None:
@@ -67,7 +71,7 @@ class Spectrum(AbstractDwfLibrarySubAPI):
 
         Note:
             The scaling of the FFT calculated is unusual. Compared to Matlab, numpy, and most other implementations, it
-            is scaled by a factor (2 / n).
+            is scaled by a factor (2 / n), with n the number of points in the input array.
 
             To get from the (magnitude, phase) representation as returned by this function to a vector of complex
             number that is comparable to what e.g. the `numpy.fft.rfft` function returns, you can do:
@@ -75,6 +79,7 @@ class Spectrum(AbstractDwfLibrarySubAPI):
             z = (len(magnitude) / 2.0) * magnitude * np.exp(phase * 1j)
 
             When working in Python, it may be better to simply use the numpy.fft.rfft() function directly.
+            It is faster and provides support for data vectors with a length that is not a power of two.
         """
 
         n = len(data)
@@ -102,8 +107,7 @@ class Spectrum(AbstractDwfLibrarySubAPI):
         """Perform a Chirp-Z transform.
 
         Parameters:
-            data: The real-valued data to be transformed. This must be a 1-dimensional array with a length that is a
-               power of 2.
+            data: The real-valued data to be transformed.
 
             num_bins (int): The number of bins to be calculated.
             
@@ -117,6 +121,18 @@ class Spectrum(AbstractDwfLibrarySubAPI):
            Tuple[np.ndarray, np.ndarray]: A tuple (magnitude, phase); both the magnitude and phase arrays are
            real-valued 1D numpy arrays with the same length as the input array `data`. The first array contains
            the non-negative magnitude of the signal for this particular frequency; the second array contains its phase.
+
+        Note:
+            The scaling of the FFT calculated is unusual. Compared to Matlab, numpy, and most other implementations, it
+            is scaled by a factor (2 / n), with n the number of points in the input array.
+
+            To get from the (magnitude, phase) representation as returned by this function to a vector of complex
+            number that is comparable to what e.g. the `scipy.signal.czt` function returns, you can do:
+
+            z = (len(data) / 2.0) * magnitude * np.exp(phase * 1j)
+
+            When working in Python, it may be better to simply use the scipy.signal.czt() function directly.
+
         """
 
         n = len(data)

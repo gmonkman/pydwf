@@ -412,7 +412,7 @@ class DwfDevice:
 
         Warning:
             The device parameter values are not checked to make sure they correspond to a valid
-            value for the specific device parameter.
+            value for the current device.
 
         Parameters:
             parameter (DwfDeviceParameter): The device parameter to set.

@@ -2,7 +2,7 @@
 
 # pylint: disable=too-many-lines
 
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 
 import numpy as np
 
@@ -256,16 +256,37 @@ class DigitalIn(AbstractDwfDeviceSubAPI):
     #                                                                                                                 #
     ###################################################################################################################
 
-    def statusData(self, count_bytes: int) -> np.ndarray:
+    def statusData(self, count: int, sample_format: Optional[int]=None) -> np.ndarray:
         """Retrieve the acquired data samples from the |DigitalIn| instrument.
 
-        Todo:
-            Figure out the data format.
+        Parameters:
+            count (int): Sample count.
+            sample_format (int) Either 8, 16 or 32 bits per sample.
+                If not specified, the current value is queried using :py:meth:`sampleFormatGet`.
+
+        Returns:
+            a 1D numpy array of 8, 16, or 32-bit unsigned words.
 
         Raises:
             DwfLibraryError: An error occurred while executing the operation.
         """
-        samples = np.empty(count_bytes, dtype='B')
+
+        if sample_format is None:
+            sample_format = self.sampleFormatGet()
+
+        # Assume that the data returned is in native endianness.
+        samples_dtype = {
+            8  : np.uint8,
+            16 : np.uint16,
+            32 : np.uint32
+        }.get(sample_format)
+
+        if samples_dtype is None:
+            raise PyDwfError("Unexpected sample format: {}".format(sample_format))
+
+        count_bytes = (sample_format // 8) * count
+
+        samples = np.empty(count, samples_dtype)
         result = self.lib.FDwfDigitalInStatusData(
             self.hdwf,
             samples.ctypes.data_as(typespec_ctypes.c_unsigned_char_ptr),
@@ -274,20 +295,41 @@ class DigitalIn(AbstractDwfDeviceSubAPI):
             raise self.dwf.exception()
         return samples
 
-    def statusData2(self, first_sample: int, count_bytes: int) -> np.ndarray:
+    def statusData2(self, offset: int, count: int, sample_format: Optional[int]=None) -> np.ndarray:
         """Retrieve the acquired data samples from the |DigitalIn| instrument.
 
-        Todo:
-            Figure out the data format.
+        Parameters:
+            count (int): Sample count.
+            sample_format (int): Either 8, 16 or 32 bits per sample.
+                If not specified, the current value is queried using :py:meth:`sampleFormatGet`.
+
+        Returns:
+            a 1D numpy array of 8, 16, or 32-bit unsigned words.
 
         Raises:
             DwfLibraryError: An error occurred while executing the operation.
         """
-        samples = np.empty(count_bytes, dtype='B')
+
+        if sample_format is None:
+            sample_format = self.sampleFormatGet()
+
+        # Assume that the data returned is in native endianness.
+        samples_dtype = {
+            8  : np.uint8,
+            16 : np.uint16,
+            32 : np.uint32
+        }.get(sample_format)
+
+        if samples_dtype is None:
+            raise PyDwfError("Unexpected sample format: {}".format(sample_format))
+
+        count_bytes = (sample_format // 8) * count
+
+        samples = np.empty(count, dtype=samples_dtype)
         result = self.lib.FDwfDigitalInStatusData2(
             self.hdwf,
             samples.ctypes.data_as(typespec_ctypes.c_unsigned_char_ptr),
-            first_sample,
+            offset,
             count_bytes)
         if result != RESULT_SUCCESS:
             raise self.dwf.exception()
